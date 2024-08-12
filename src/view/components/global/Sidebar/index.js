@@ -6,7 +6,7 @@ import { DatabaseOutlined, SettingOutlined, TeamOutlined } from '@ant-design/ico
 const items = [
     {
       key: 'board',
-      label: 'Kabinet Board',
+      label: 'Cabinet Board',
       icon: <DatabaseOutlined />
     },
     {

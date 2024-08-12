@@ -17,10 +17,7 @@ const route = createBrowserRouter(
     <Route path="/" element={<MainLayout />}>
         <Route path="login" element={<Login />}/>
         <Route path="register" element={<Register />}/>
-
-        <Route path="cabinet" element={<CabinetLayout />}>
-
-        </Route>  
+        <Route path="cabinet" element={<CabinetLayout />} />
     </Route>
   )
 );
@@ -59,15 +56,11 @@ const App = () => {
   }, [])
 
   return (
-    <>
-   
       <LoadingWrapper loading={loading} fullScreen>
         <AuthContextProvider value={{ isAuth, userProfileInfo, setIsAuth }}>
           <RouterProvider router={route}/>
         </AuthContextProvider>
       </LoadingWrapper>
-    </>
-  
   )
 };
 

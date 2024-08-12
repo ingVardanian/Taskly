@@ -48,7 +48,7 @@ const SubHeader = () => {
             >
                 {
                     users.map((user)=> {
-                        <Avatar> 
+                       return <Avatar> 
                            { getFirstLetters(`${user.label}`)}
                         </Avatar>
                     })
