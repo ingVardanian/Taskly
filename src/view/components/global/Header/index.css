@@ -1,0 +1,12 @@
+.main_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(7, 71, 166);
+    box-shadow: 1px 1px 1px #cccc;
+}
+
+.main_header h3 {
+    margin: 0;
+    color: #fff;
+}
