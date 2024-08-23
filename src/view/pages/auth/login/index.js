@@ -4,6 +4,7 @@ import { auth } from '../../../../services/firebase/firebase';
 import { Typography, Input, Button, Divider, Form, Flex, notification } from 'antd';
 import AuthWrapper from '../../../components/shared/AuthWrapper';
 import LoginCoverImg from '../../../../core/images/loginCover.png';
+import { ROUTES_CONSTANTS } from '../../../../routes';
 import { Link, useNavigate } from 'react-router-dom';
 
 const { Title, Text } = Typography;
@@ -20,7 +21,7 @@ const Login = () => {
         try{
             const { email, password } = values;
             await signInWithEmailAndPassword(auth, email, password);
-            navigate('/cabinet');
+            navigate(ROUTES_CONSTANTS.CABINET);
         }catch(error) {
             notification.error({
                 message: 'Error',
@@ -72,7 +73,7 @@ const Login = () => {
                 
                 <Flex justify="space-between" align="flex-end">
                     <Text underline>
-                        <Link to="/register">
+                        <Link to={ROUTES_CONSTANTS.REGISTER}>
                             Create Account
                         </Link>
                     </Text>
@@ -92,3 +93,4 @@ const Login = () => {
 };
 
 export default Login;
+

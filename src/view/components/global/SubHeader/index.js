@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input, Avatar, Button, Divider } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import CreateIssueModal from '../../shared/CreateIssueModal';
-import './index.css';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../../../../services/firebase/firebase';
+import { db, getDocs, collection } from '../../../../services/firebase/firebase';
 import { getFirstLetters } from '../../../../core/helpers/getFirstLetters';
+import './index.css';
 
 const SubHeader = () => {
     const [users, setUsers] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
+    
     useEffect(() => {
         const handleGetUsersData = async () => {
             const queryData = await getDocs(collection(db, 'registerUsers'));
@@ -22,8 +23,8 @@ const SubHeader = () => {
     
         handleGetUsersData();
     }, []);
-    const [modalVisible, setModalVisible] = useState(false);
-    
+
+
     const handleOpenModal = () => {
         setModalVisible(true);
     }
@@ -47,10 +48,12 @@ const SubHeader = () => {
                 }}
             >
                 {
-                    users.map((user)=> {
-                        <Avatar> 
-                           { getFirstLetters(`${user.label}`)}
-                        </Avatar>
+                    users.map((user) => {
+                        return (
+                            <Avatar style={{backgroundColor: 'green'}}>
+                                {getFirstLetters(`${user.label}`)}
+                            </Avatar>
+                        )
                     })
                 }
             </Avatar.Group>

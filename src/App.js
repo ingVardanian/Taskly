@@ -1,29 +1,20 @@
 import { useState, useEffect } from 'react';
 import { MainLayout, CabinetLayout } from './view/layouts';
 import { Login, Register } from './view/pages/auth';
+import CabinetBoard from './view/pages/cabinetBoard';
 import LoadingWrapper from './view/components/shared/LoadingWrapper';
 import { db, auth, doc, getDoc, onAuthStateChanged } from './services/firebase/firebase';
 import { AuthContextProvider } from './context/AuthContext';
+import { ROUTES_CONSTANTS } from './routes';
 import {  
   Route, 
+  Navigate,
   RouterProvider,
   createBrowserRouter, 
   createRoutesFromElements,
 } from 'react-router-dom';
 import './App.css';
 
-const route = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path="/" element={<MainLayout />}>
-        <Route path="login" element={<Login />}/>
-        <Route path="register" element={<Register />}/>
-
-        <Route path="cabinet" element={<CabinetLayout />}>
-
-        </Route>  
-    </Route>
-  )
-);
 
 
 const App = () => {
@@ -59,15 +50,34 @@ const App = () => {
   }, [])
 
   return (
-    <>
-   
-      <LoadingWrapper loading={loading} fullScreen>
-        <AuthContextProvider value={{ isAuth, userProfileInfo, setIsAuth }}>
-          <RouterProvider router={route}/>
-        </AuthContextProvider>
-      </LoadingWrapper>
-    </>
-  
+    <LoadingWrapper loading={loading} fullScreen>
+      <AuthContextProvider value={{ isAuth, userProfileInfo, setIsAuth }}>
+        <RouterProvider router={
+          createBrowserRouter(
+            createRoutesFromElements(
+              <Route path="/" element={<MainLayout />}>
+                  <Route 
+                    path={ROUTES_CONSTANTS.LOGIN} 
+                    element={!isAuth ? <Login /> : <Navigate to={ROUTES_CONSTANTS.CABINET}/>}
+                  />
+                  <Route 
+                    path={ROUTES_CONSTANTS.REGISTER} 
+                    element={!isAuth ? <Register /> : <Navigate to={ROUTES_CONSTANTS.REGISTER}/>}
+                  />
+
+                  {/* ------ Cabinet Layout Route ------ */}
+                  <Route 
+                    path={ROUTES_CONSTANTS.CABINET} 
+                    element={isAuth ? <CabinetLayout /> : <Navigate to={ROUTES_CONSTANTS.LOGIN}/>} 
+                  >
+                    <Route path={ROUTES_CONSTANTS.CABINET} element={<CabinetBoard />}/>
+                  </Route>
+              </Route>
+            )
+          )
+        }/>
+      </AuthContextProvider>
+    </LoadingWrapper>
   )
 };
 
