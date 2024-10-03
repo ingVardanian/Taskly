@@ -1,13 +1,13 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { Modal, Form, notification } from 'antd';
 import { taskStatus } from '../../../../core/constants/issue';
 import { doc, setDoc, db, updateDoc, arrayUnion } from '../../../../services/firebase/firebase';
-import { AuthContext } from '../../../../context/AuthContext';
 import IssueModalForm from '../IssueModalForm';
-
+import { useDispatch } from 'react-redux';
+import {fetchIssuesData } from '../../../../state-managment/reducers/issuesSlice'
 const CreateIssueModal = ({ visible, setVisible }) => { //render
     const [ form ] = Form.useForm();
-    const { handleGetIssues } = useContext(AuthContext);
+    const dispatch = useDispatch();
     const [confirmLoading, setConfirmLoading] = useState(false);
 
     const handleUpdateAssigneesTask = async (taskId, assignerId) => {
@@ -32,22 +32,22 @@ const CreateIssueModal = ({ visible, setVisible }) => { //render
             ...values
         }
      
-        try{
+        try {
             const createDoc = doc(db, 'issue', taskId);
             await setDoc(createDoc, taskDataModel);
             await handleUpdateAssigneesTask(taskId, values.assignees);
-            handleGetIssues();
+            dispatch(fetchIssuesData())
             notification.success({
                 message: 'Your task has been created',
             });
-
+           
             setVisible(false);
             form.resetFields();
-        }catch(error) {
+        } catch(error) {
             notification.error({
                 message: 'Error ooops :(',
             });
-        }finally{
+        } finally {
             setConfirmLoading(false);
         }
     }

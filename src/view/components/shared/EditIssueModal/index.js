@@ -1,15 +1,15 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import { Modal, Form, notification, Typography, Space } from 'antd';
 import { ISSUE_OPTION } from '../../../../core/constants/issue';
 import { updateDoc, doc, db } from '../../../../services/firebase/firebase';
 import IssueModalForm from '../IssueModalForm';
-import { AuthContext } from '../../../../context/AuthContext';
-
+import { useDispatch } from 'react-redux';
+import {fetchIssuesData} from '../../../../state-managment/reducers/issuesSlice';
 const { Text } = Typography;
 
 const EditIssueModal = ({ visible, onClose, issueData }) => {
     const [ form ] = Form.useForm(); 
-    const { handleGetIssues } = useContext(AuthContext);
+    const dispatch = useDispatch();
     const [confirmLoading, setConfirmLoading] = useState(false);
 
     const handleClose = () => {
@@ -27,7 +27,7 @@ const EditIssueModal = ({ visible, onClose, issueData }) => {
         const docRef = doc(db, 'issue', issueData.key); 
         await updateDoc(docRef, values);
         handleClose();
-        handleGetIssues();
+        dispatch(fetchIssuesData());
         notification.success({
             message: 'Your task has been updated',
         });

@@ -3,7 +3,7 @@ import { MainLayout, CabinetLayout } from './view/layouts';
 import { Login, Register } from './view/pages/auth';
 import CabinetBoard from './view/pages/cabinetBoard';
 import LoadingWrapper from './view/components/shared/LoadingWrapper';
-import { db, auth, doc, getDoc, getDocs, collection, onAuthStateChanged } from './services/firebase/firebase';
+import { db, auth, doc, getDoc, onAuthStateChanged } from './services/firebase/firebase';
 import { AuthContextProvider } from './context/AuthContext';
 import { ROUTES_CONSTANTS } from './routes';
 import {  
@@ -13,34 +13,18 @@ import {
   createBrowserRouter, 
   createRoutesFromElements,
 } from 'react-router-dom';
-import './App.css';
 import { store } from './state-managment/store';
 import { Provider } from 'react-redux';
 
 const App = () => {
   const [isAuth, setIsAuth] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState([]); //Todo Next Redux
   const [userProfileInfo, setUserProfileInfo] = useState({ //Todo Next Redux
     firstName: '',
     lastName: '',
     headline: '',
     email: ''
   });
-
-  useEffect(() => {
-    const handleGetUsersData = async () => {
-        const queryData = await getDocs(collection(db, 'registerUsers'));
-        const result = queryData.docs.map((doc) => {
-            const { firstName, lastName } = doc.data();
-            return {label: `${firstName} ${lastName}`, value: doc.id}
-        });
-
-        setUsers(result);
-    }
-
-    handleGetUsersData();
-}, []);
 
 
   useEffect(() => {
@@ -72,7 +56,6 @@ const App = () => {
           isAuth,
           userProfileInfo, 
           setIsAuth, 
-          users
         }}>
           <RouterProvider router={
             createBrowserRouter(

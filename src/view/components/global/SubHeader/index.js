@@ -1,13 +1,13 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
+import { useSelector}  from'react-redux';
 import { Input, Avatar, Button, Divider } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import CreateIssueModal from '../../shared/CreateIssueModal';
 import { getFirstLetters } from '../../../../core/helpers/getFirstLetters';
-import { AuthContext } from '../../../../context/AuthContext';
 import './index.css';
 
 const SubHeader = () => {
-    const { users } = useContext(AuthContext);
+    const { users } = useSelector((state) => state.users);
 
     const [modalVisible, setModalVisible] = useState(false);
 

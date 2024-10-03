@@ -7,6 +7,7 @@ import EditIssueModal from '../../components/shared/EditIssueModal';
 import { ISSUE_OPTION, PRIORITY_OPTION } from '../../../core/constants/issue';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchIssuesData, changeIssueColumns } from '../../../state-managment/reducers/issuesSlice';
+import { fetchUserData } from '../../../state-managment/reducers/usersSlice';
 import './index.css';
 
 const { Title, Text } = Typography;
@@ -15,10 +16,12 @@ const CabinetBoard = () => {
     const [ selectedIssueData, setSelectedIssueData ] = useState(null);
     const dispatch = useDispatch();
 
+    console.log(fetchUserData)
     const { issueColumns, loading } = useSelector(state => state.issues);
 
     useEffect(() => {
         dispatch(fetchIssuesData());
+        dispatch(fetchUserData());
     },[]);
 
     const handleDragEnd = result => {
