@@ -16,7 +16,6 @@ const MainHeader = () => {
                     Jira
                 </Typography.Title>
             </Link>
-           
             <Space>
                 {
                     isAuth ? (
