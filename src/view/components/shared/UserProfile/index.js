@@ -5,15 +5,20 @@ import { auth } from '../../../../services/firebase/firebase';
 import { getFirstLetters } from '../../../../core/helpers/getFirstLetters';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES_CONSTANTS } from '../../../../routes';
+import { useDispatch } from 'react-redux';
+import { setIsAuth } from '../../../../state-management/slices/authUserInfoSlice'; 
+
 const { Text } = Typography;
 
-const UserProfile = ({ userProfileInfo, setIsAuth }) => {
+const UserProfile = ({ userProfileInfo}) => {
+    const dispatch = useDispatch();
     const { firstName, lastName, headline, email } = userProfileInfo;
+
     const navigate  = useNavigate();
     const handleLogout = async () => {
         try {
             await signOut(auth);
-            setIsAuth(false);
+            dispatch(setIsAuth(false))
         } catch(e) {
             console.log(e, 'error')
         }

@@ -1,10 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { MainLayout, CabinetLayout } from './view/layouts';
 import { Login, Register } from './view/pages/auth';
 import CabinetBoard from './view/pages/cabinetBoard';
 import LoadingWrapper from './view/components/shared/LoadingWrapper';
-import { db, auth, doc, getDoc, onAuthStateChanged } from './services/firebase/firebase';
-import { AuthContextProvider } from './context/AuthContext';
 import { ROUTES_CONSTANTS } from './routes';
 import {  
   Route, 
@@ -13,50 +11,19 @@ import {
   createBrowserRouter, 
   createRoutesFromElements,
 } from 'react-router-dom';
-import { store } from './state-managment/store';
-import { Provider } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserProfileInfo } from './state-management/slices/authUserInfoSlice';
 
 const App = () => {
-  const [isAuth, setIsAuth] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [userProfileInfo, setUserProfileInfo] = useState({ //Todo Next Redux
-    firstName: '',
-    lastName: '',
-    headline: '',
-    email: ''
-  });
-
+  const dispatch = useDispatch();
+  const {loading, authUserInfo: { isAuth }} = useSelector(state => state.authInfo);
 
   useEffect(() => {
-    setLoading(true);
-    
-    onAuthStateChanged(auth, (user) => { 
-      setLoading(false)
-
-      if (user) {
-        setIsAuth(true);
-          const { uid } = user;
-          const ref = doc(db, 'registerUsers', uid);
-
-          getDoc(ref).then((userData) => {
-            if (userData.exists()) {
-              setUserProfileInfo(userData.data()) 
-            }
-          })
-      } else {
-
-      }
-    })
-  }, [])
+    dispatch(fetchUserProfileInfo())
+  }, []);
 
   return (
     <LoadingWrapper loading={loading} fullScreen>
-      <Provider store={store}>
-        <AuthContextProvider value={{ 
-          isAuth,
-          userProfileInfo, 
-          setIsAuth, 
-        }}>
           <RouterProvider router={
             createBrowserRouter(
               createRoutesFromElements(
@@ -81,8 +48,6 @@ const App = () => {
               )
             )
           }/>
-        </AuthContextProvider>
-      </Provider>
     </LoadingWrapper>
   )
 };

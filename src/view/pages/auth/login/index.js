@@ -5,24 +5,25 @@ import { Typography, Input, Button, Divider, Form, Flex, notification } from 'an
 import AuthWrapper from '../../../components/shared/AuthWrapper';
 import LoginCoverImg from '../../../../core/images/loginCover.png';
 import { ROUTES_CONSTANTS } from '../../../../routes';
-import { Link, useNavigate } from 'react-router-dom';
-
+import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setIsAuth } from '../../../../state-management/slices/authUserInfoSlice';
 const { Title, Text } = Typography;
 
 
 const Login = () => {
+    const dispatch =useDispatch()
     const [loading, setLoading] = useState(false);
     const [ form ] = Form.useForm();
-    const navigate = useNavigate();
 
     const handleLogin = async (values) => {
         setLoading(true);
 
-        try{
+        try {
             const { email, password } = values;
             await signInWithEmailAndPassword(auth, email, password);
-            navigate(ROUTES_CONSTANTS.CABINET);
-        }catch(error) {
+            dispatch(setIsAuth(true))
+        } catch(error) {
             notification.error({
                 message: 'Error',
                 description: 'Invalid login credentials',

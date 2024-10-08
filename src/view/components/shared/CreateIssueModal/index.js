@@ -4,7 +4,7 @@ import { taskStatus } from '../../../../core/constants/issue';
 import { doc, setDoc, db, updateDoc, arrayUnion } from '../../../../services/firebase/firebase';
 import IssueModalForm from '../IssueModalForm';
 import { useDispatch } from 'react-redux';
-import {fetchIssuesData } from '../../../../state-managment/reducers/issuesSlice'
+import {fetchIssuesData } from '../../../../state-management/slices/issuesSlice'
 const CreateIssueModal = ({ visible, setVisible }) => { //render
     const [ form ] = Form.useForm();
     const dispatch = useDispatch();

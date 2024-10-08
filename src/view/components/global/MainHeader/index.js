@@ -1,13 +1,12 @@
-import { useContext } from 'react';
 import { Layout, Button, Typography, Space } from 'antd';
 import UserProfile from '../../shared/UserProfile';
-import { AuthContext } from '../../../../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { ROUTES_CONSTANTS } from '../../../../routes';
+import { useSelector } from 'react-redux';
 import './index.css';
 
 const MainHeader = () => { 
-    const { isAuth, setIsAuth, userProfileInfo } = useContext(AuthContext);
+    const { authUserInfo: { isAuth, userProfileInfo }} = useSelector(state => state.authInfo);
 
     return (
         <Layout.Header className="main_header">
@@ -19,7 +18,7 @@ const MainHeader = () => {
             <Space>
                 {
                     isAuth ? (
-                        <UserProfile setIsAuth={setIsAuth} userProfileInfo={userProfileInfo} />
+                        <UserProfile userProfileInfo={userProfileInfo} />
                     ) : (
                         <Link to={ROUTES_CONSTANTS.LOGIN}>
                             <Button>

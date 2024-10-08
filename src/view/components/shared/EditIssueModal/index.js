@@ -4,7 +4,7 @@ import { ISSUE_OPTION } from '../../../../core/constants/issue';
 import { updateDoc, doc, db } from '../../../../services/firebase/firebase';
 import IssueModalForm from '../IssueModalForm';
 import { useDispatch } from 'react-redux';
-import {fetchIssuesData} from '../../../../state-managment/reducers/issuesSlice';
+import {fetchIssuesData} from '../../../../state-management/slices/issuesSlice';
 const { Text } = Typography;
 
 const EditIssueModal = ({ visible, onClose, issueData }) => {
