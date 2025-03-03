@@ -2,7 +2,9 @@ const ROUTES_CONSTANTS = {
     LOGIN: '/login',
     REGISTER: '/register',
     CABINET: '/cabinet',
-    EDIT_PROFILE: '/edit-profile'
+    EDIT_PROFILE: '/edit-profile',
+    PROJECT_SETTINGS: '/project-settings',
+    TEAM: '/team'
 }
 
 export {

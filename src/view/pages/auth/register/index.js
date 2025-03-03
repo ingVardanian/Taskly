@@ -3,7 +3,7 @@ import { Typography, Input, Button, Divider, Form, notification, Flex } from 'an
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, setDoc, doc, db } from '../../../../services/firebase/firebase';
 import AuthWrapper from '../../../components/shared/AuthWrapper';
-import registerCoverImg from '../../../../core/images/registerCover.png';
+import registerCoverImg from '../../../../core/images/register.jpeg';
 import { Link, useNavigate } from 'react-router-dom';
 import { ROUTES_CONSTANTS } from '../../../../routes';
 

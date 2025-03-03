@@ -11,7 +11,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyB09Bu84UQilD47XxmhomOLQg6zoFj53Zs",
   authDomain: "jira-3fce5.firebaseapp.com",
   projectId: "jira-3fce5",
-  storageBucket: "jira-3fce5.appspot.com",
+  storageBucket: "jira-3fce5.firebasestorage.app",
   messagingSenderId: "324615740265",
   appId: "1:324615740265:web:e044317aa35249ad1cbbf8",
   measurementId: "G-P2QFL1X7WJ"

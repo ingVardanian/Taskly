@@ -3,27 +3,27 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../../../services/firebase/firebase';
 import { Typography, Input, Button, Divider, Form, Flex, notification } from 'antd';
 import AuthWrapper from '../../../components/shared/AuthWrapper';
-import LoginCoverImg from '../../../../core/images/loginCover.png';
+import LoginCoverImg from '../../../../core/images/logInImg.jpg';
 import { ROUTES_CONSTANTS } from '../../../../routes';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setIsAuth } from '../../../../state-management/slices/authUserInfoSlice';
+import { setIsAuth } from '../../../../state-managment/slices/authUserInfoSlice';
+
 const { Title, Text } = Typography;
 
 
 const Login = () => {
-    const dispatch =useDispatch()
+    const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [ form ] = Form.useForm();
-
     const handleLogin = async (values) => {
         setLoading(true);
 
-        try {
+        try{
             const { email, password } = values;
             await signInWithEmailAndPassword(auth, email, password);
-            dispatch(setIsAuth(true))
-        } catch(error) {
+            dispatch(setIsAuth(true));
+        }catch(error) {
             notification.error({
                 message: 'Error',
                 description: 'Invalid login credentials',
@@ -73,7 +73,7 @@ const Login = () => {
                 <Divider />
                 
                 <Flex justify="space-between" align="flex-end">
-                    <Text underline>
+                    <Text>
                         <Link to={ROUTES_CONSTANTS.REGISTER}>
                             Create Account
                         </Link>

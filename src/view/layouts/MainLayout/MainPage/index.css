@@ -1,0 +1,43 @@
+.homePageWrapper {
+    height: 100%;
+    width: 100%;
+    margin: 100px auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.homePageImg {
+    background-size: cover;
+    background-position: center;
+    width: 900px;
+    height: 660px;
+    background-image: url('../../../../core/images/homePage.jpg');
+}
+.homePageText {
+    max-width: 500px;
+}
+.bigText {
+    font-size: 45px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.homePageText span {
+    color: #0073ea;
+    font-weight: bold;
+    font-size: 1.2em;
+    display: inline-block;
+}
+.homePageText span::after {
+    content: "";
+    display: block;
+    flex-direction: column;
+    width: 200px;
+    height: 45px;
+    background-image: url('../../../../core/images/wayvy.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+}
+

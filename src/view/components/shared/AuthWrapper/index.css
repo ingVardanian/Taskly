@@ -1,5 +1,5 @@
 .auth_style_wrapper {
-    max-width: 700px;
+    max-width:1058px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     margin: 100px auto;

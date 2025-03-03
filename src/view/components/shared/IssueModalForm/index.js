@@ -1,10 +1,10 @@
-import { useSelector } from 'react-redux';
 import { Form, Select, Input } from 'antd';
 import Editor from '../Editor';
 import { issueTypes, priority } from '../../../../core/constants/issue';
+import { useSelector } from 'react-redux';
 
 const IssueModalForm = ({ form, onFinish }) => {
-    const { users } = useSelector((state) => state.users);
+  const { users } = useSelector((state) => state.users);
 
     return (
         <Form layout="vertical" form={form} onFinish={onFinish}>

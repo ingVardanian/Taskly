@@ -6,8 +6,8 @@ import { Typography, Flex } from 'antd';
 import EditIssueModal from '../../components/shared/EditIssueModal';
 import { ISSUE_OPTION, PRIORITY_OPTION } from '../../../core/constants/issue';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchIssuesData, changeIssueColumns } from '../../../state-management/slices/issuesSlice';
-import { fetchUserData } from '../../../state-management/slices/usersSlice';
+import { fetchIssuesData, changeIssueColumns } from '../../../state-managment/slices/issuesSlice';
+import { fetchUsersData } from '../../../state-managment/slices/usersSlice';
 import './index.css';
 
 const { Title, Text } = Typography;
@@ -16,13 +16,12 @@ const CabinetBoard = () => {
     const [ selectedIssueData, setSelectedIssueData ] = useState(null);
     const dispatch = useDispatch();
 
-    console.log(fetchUserData)
     const { issueColumns, loading } = useSelector(state => state.issues);
 
     useEffect(() => {
         dispatch(fetchIssuesData());
-        dispatch(fetchUserData());
-    },[]);
+        dispatch(fetchUsersData());
+    },[dispatch]);
 
     const handleDragEnd = result => {
         dispatch(changeIssueColumns(result));

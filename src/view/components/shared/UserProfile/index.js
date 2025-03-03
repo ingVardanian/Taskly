@@ -3,18 +3,17 @@ import { UserOutlined } from '@ant-design/icons';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../../services/firebase/firebase';
 import { getFirstLetters } from '../../../../core/helpers/getFirstLetters';
+import { ROUTES_CONSTANTS } from '../../../../routes/';
 import { useNavigate } from 'react-router-dom';
-import { ROUTES_CONSTANTS } from '../../../../routes';
 import { useDispatch } from 'react-redux';
-import { setIsAuth } from '../../../../state-management/slices/authUserInfoSlice'; 
+import { setIsAuth } from '../../../../state-managment/slices/authUserInfoSlice';
 
 const { Text } = Typography;
 
-const UserProfile = ({ userProfileInfo}) => {
+const UserProfile = ({ userProfileInfo }) => {
     const dispatch = useDispatch();
     const { firstName, lastName, headline, email } = userProfileInfo;
-
-    const navigate  = useNavigate();
+    const navigate = useNavigate();
     const handleLogout = async () => {
         try {
             await signOut(auth);
@@ -51,13 +50,13 @@ const UserProfile = ({ userProfileInfo}) => {
             )
         },
         {
-            onClick: () => navigate(ROUTES_CONSTANTS.CABINET),
-            key: 'cabinet',
-            label: (
-                <Text>
-                    Cabinet
-                </Text>
-            )
+          onClick: () => navigate(ROUTES_CONSTANTS.CABINET),
+          key: 'cabinet',
+          label: (
+            <Text>
+              Cabinet
+            </Text>
+          )
         },
         {
             onClick: handleLogout,
@@ -67,7 +66,7 @@ const UserProfile = ({ userProfileInfo}) => {
                     Logout
                 </Text>
             )
-        }
+        },
     ]
 
     return (

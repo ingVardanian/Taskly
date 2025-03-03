@@ -17,9 +17,9 @@
 
 .sub_header {
    grid-area: subHeader;
-   background-color: rgb(244,245,247);
-   padding-left: 12px;
+   background-color: rgb(244, 245, 247);
    border-bottom-left-radius: 8px;
+   padding-left: 12px;
 }
 
 .main_container {

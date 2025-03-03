@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useSelector}  from'react-redux';
+import { useSelector } from 'react-redux';
 import { Input, Avatar, Button, Divider } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import CreateIssueModal from '../../shared/CreateIssueModal';
