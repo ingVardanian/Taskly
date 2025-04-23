@@ -43,6 +43,8 @@ const CabinetBoard = () => {
             }
         }
     }
+    const { users } = useSelector(state => state.users);
+    const getUserById = (userId) => users.find(user => user.id === userId);
 
     return (
         <div className="drag_context_container">
@@ -104,12 +106,17 @@ const CabinetBoard = () => {
                                                                                                 {ISSUE_OPTION[item.issueType].icon}
                                                                                                 {' '}
                                                                                                 {PRIORITY_OPTION[item.priority].icon}
+                                                                                               
                                                                                             </div>
-
+                                                                                            {console.log(item.assignees)}
                                                                                             <div>
 
                                                                                             </div>
                                                                                         </Flex>
+                                                                                    <div className="assignees_container">
+                                                                                       
+                                                                                    </div>
+
                                                                                     </div>
                                                                                 )
                                                                             }

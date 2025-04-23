@@ -1,6 +1,6 @@
 import { Menu } from 'antd';
 import { DatabaseOutlined, SettingOutlined, TeamOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './index.css';
 import { ROUTES_CONSTANTS } from '../../../../routes';
 
@@ -27,13 +27,16 @@ const items = [
 
 const Sidebar = () => {
   const navigate = useNavigate();
-
+  const location = useLocation(); 
+    
   const handleMenuClick = (e) => {
     const selectedItem = items.find(item => item.key === e.key);
     if (selectedItem) {
       navigate(selectedItem.path);
     }
   };
+
+  const activeKey = items.find(item => item.path === location.pathname)?.key;
 
   return (
     <div className="sidebar">
@@ -42,6 +45,7 @@ const Sidebar = () => {
         items={items}
         mode="inline"
         onClick={handleMenuClick}
+        selectedKeys={[activeKey]}
       />
     </div>
   );
