@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, Input, Button, Divider, Form, notification, Flex } from 'antd';
+import { Typography, Input, Button, Divider, Form, notification, Flex, Switch } from 'antd';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, setDoc, doc, db } from '../../../../services/firebase/firebase';
 import AuthWrapper from '../../../components/shared/AuthWrapper';
@@ -15,16 +15,18 @@ const Register = () => {
     const [ form ] = Form.useForm();
     const navigate = useNavigate();
     const [ loading, setLoading ] = useState(false);
-
+    const [isAdmin, setIsAdmin] = useState(false);
     const handleRegister = async (values) => {
         setLoading(true);
         try {
-            const { email, password, ...restData } = values;
+            const { email, password,  isAdmin, ...restData } = values;
             const response = await createUserWithEmailAndPassword(auth, email, password);
             const uid = response.user.uid;
             const createDoc = doc(db, 'registerUsers', uid);
             await setDoc(createDoc, {
-                email, ...restData
+                email,
+                 ...restData,
+                isAdmin
             });
             navigate(ROUTES_CONSTANTS.LOGIN);
         }catch{
@@ -106,6 +108,10 @@ const Register = () => {
                         type="email"
                         placeholder="Email"
                     />
+                </Form.Item>
+
+                <Form.Item label="Admin">
+                    <Switch checked={isAdmin} onChange={setIsAdmin} />
                 </Form.Item>
 
                 <Form.Item 
