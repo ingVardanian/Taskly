@@ -7,7 +7,7 @@ import { ROUTES_CONSTANTS } from '../../../../routes/';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setIsAuth } from '../../../../state-managment/slices/authUserInfoSlice';
-
+import { getColorByName } from '../../../../core/helpers/getColorByName';
 const { Text } = Typography;
 
 const UserProfile = ({ userProfileInfo }) => {
@@ -22,7 +22,7 @@ const UserProfile = ({ userProfileInfo }) => {
             console.log(e, 'error')
         }
     }
-
+    
     const items = [
         {
             key: 'profile',
@@ -70,15 +70,16 @@ const UserProfile = ({ userProfileInfo }) => {
     ]
 
     return (
-        <Dropdown 
-            menu={{
-                items
-            }}
-        >
-            <Avatar size="large">
+        <Dropdown menu={{ items }}>
+            <Avatar
+            
+                size="large"
+                style={{ backgroundColor: getColorByName(`${firstName} ${lastName}`) , cursor: 'pointer', }}
+            >
                 {getFirstLetters(`${firstName} ${lastName}`)}
             </Avatar>
         </Dropdown>
+
     )
 };
 

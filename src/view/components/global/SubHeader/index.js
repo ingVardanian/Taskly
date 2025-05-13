@@ -4,6 +4,8 @@ import { Input, Avatar, Button, Divider } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import CreateIssueModal from '../../shared/CreateIssueModal';
 import { getFirstLetters } from '../../../../core/helpers/getFirstLetters';
+import { getColorByName } from '../../../../core/helpers/getColorByName';
+
 import './index.css';
 
 const SubHeader = () => {
@@ -33,15 +35,16 @@ const SubHeader = () => {
                     }
                 }}
             >
-                {
-                    users.map((user) => {
-                        return (
-                            <Avatar style={{backgroundColor: 'green'}}>
-                                {getFirstLetters(`${user.label}`)}
-                            </Avatar>
-                        )
-                    })
-                }
+              {
+                users.map((user, index) => {
+                    const color = getColorByName(user.label);
+                    return (
+                        <Avatar key={index} style={{ backgroundColor: color }}>
+                            {getFirstLetters(`${user.label}`)}
+                        </Avatar>
+                    );
+                })
+            }
             </Avatar.Group>
 
             <Divider type="vertical"/>

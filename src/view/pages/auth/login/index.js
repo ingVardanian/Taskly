@@ -8,7 +8,7 @@ import { ROUTES_CONSTANTS } from '../../../../routes';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setIsAuth } from '../../../../state-managment/slices/authUserInfoSlice';
-
+import './index.css'
 const { Title, Text } = Typography;
 
 
@@ -34,6 +34,7 @@ const Login = () => {
     }
 
     return (
+        <div className='loginCover'>
         <AuthWrapper coverImg={LoginCoverImg}>
             <Title level={3}>
                 Sign In
@@ -90,6 +91,7 @@ const Login = () => {
                 
             </Form>
         </AuthWrapper>
+        </div>
     )
 };
 
