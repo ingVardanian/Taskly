@@ -13,7 +13,7 @@ const IssueModalForm = ({ form, onFinish }) => {
                 label="Issue Type"
                 rules={[{ required: true, message: 'Please Select Issue Type!' }]}
             >
-                <Select
+                <Select  
                     showSearch
                     placeholder="Issue Type"
                 >
@@ -67,6 +67,7 @@ const IssueModalForm = ({ form, onFinish }) => {
                 rules={[{ required: true, message: 'Please Select Assignees!' }]}
             >
                 <Select
+                 mode="multiple" 
                     showSearch
                     placeholder="Assignees"
                     options={users}

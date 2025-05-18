@@ -1,114 +1,146 @@
 import { useState } from 'react';
 import { Modal, Form, notification } from 'antd';
 import { taskStatus } from '../../../../core/constants/issue';
-import { doc, setDoc, db, updateDoc, arrayUnion } from '../../../../services/firebase/firebase';
+import { doc, setDoc, updateDoc, arrayUnion, db } from '../../../../services/firebase/firebase';
+import { getDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import IssueModalForm from '../IssueModalForm';
 import { fetchIssuesData } from '../../../../state-managment/slices/issuesSlice';
 import { useDispatch } from 'react-redux';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import emailjs from '@emailjs/browser';
 
 const CreateIssueModal = ({ visible, setVisible }) => {
-    const [ form ] = Form.useForm();
+    const [form] = Form.useForm();
     const [confirmLoading, setConfirmLoading] = useState(false);
     const dispatch = useDispatch();
 
+    const handleCloseModal = () => {
+        form.resetFields();
+        setVisible(false);
+    };
+
     const handleUpdateAssigneesTask = async (taskId, userIds) => {
-        for (const userId of userIds) {
-            try {
-                const docRef = doc(db, 'registerUsers', userId);
-                await updateDoc(docRef, {
-                    task: arrayUnion(taskId) // Add taskId to the task array of the user
-                });
-            } catch (error) {
-                console.error(`Error updating task for user ${userId}: `, error);
-            }
+    const ids = Array.isArray(userIds) ? userIds : [userIds];
+
+    for (const userId of ids) {
+        try {
+            const userRef = doc(db, 'registerUsers', userId);
+            await updateDoc(userRef, {
+                task: arrayUnion(taskId),
+            });
+        } catch (error) {
+            console.error(`Error updating task for user ${userId}:`, error);
         }
+    }
+};
+
+   const sendEmailNotification = (email, taskTitle) => {
+        const templateParams = {
+            email: email,
+            title: taskTitle,
+        };
+
+        emailjs.send('service_o6vsblb', 'template_feab5vs', templateParams, '7Pr3vPWGaUMqaSyDX')
+            .then(() => {
+            console.log('Email sent!');
+            }, (error) => {
+            console.error('Email sending error:', error);
+            });
+    };
+    const sendSlackNotification = (username, taskTitle) => {
+        console.log(`Slack to ${username}: "New Task Assigned - ${taskTitle}"`);
     };
 
     const createNotificationForAssignee = async (taskId, userId, taskTitle) => {
-        try {
-            await addDoc(collection(db, 'notifications'), {
-                recipientId: userId,
-                type: 'issue_assigned',
-                issueId: taskId,
-                message: `You've been assigned a new issue: "${taskTitle}"`,
-                isRead: false,
-                createdAt: serverTimestamp()
-            });
-        } catch (error) {
-            console.error(`Error creating notification for user ${userId}: `, error);
-        }
-    };
+    try {
+        await addDoc(collection(db, 'notifications'), {
+            recipientId: userId,
+            type: 'issue_assigned',
+            issueId: taskId,
+            message: `You've been assigned a new issue: "${taskTitle}"`,
+            isRead: false,
+            createdAt: serverTimestamp(),
+        });
 
-    const handleCloseModal = () => {
-        setVisible(false);
-        form.resetFields();
-    };
+        const userRef = doc(db, 'registerUsers', userId);
+        const userSnap = await getDoc(userRef);
+
+        if (!userSnap.exists()) {
+            console.warn(`User with ID ${userId} does not exist.`);
+            return;
+        }
+
+        const { notifications = {}, email, slackUsername, firstName } = userSnap.data();
+
+        if (notifications.email && email) {
+            sendEmailNotification(email, taskTitle);
+        }
+
+        if (notifications.slack) {
+            sendSlackNotification(slackUsername || firstName, taskTitle);
+        }
+    } catch (error) {
+        console.error(`Error in createNotificationForAssignee for ${userId}:`, error);
+    }
+};
 
     const handleCreateIssue = async (values) => {
-        const taskId = `${Date.now()}`;
-        setConfirmLoading(true);
+    setConfirmLoading(true);
+    const taskId = `${Date.now()}`;
 
-        const taskDataModel = {
-            key: taskId,
-            status: taskStatus.TODO.key,
-            ...values
-        };
-
-        console.log('Task Data Model: ', taskDataModel);  // Debugging log
-
-        try {
-            const createDoc = doc(db, 'issue', taskId);
-            await setDoc(createDoc, taskDataModel); // Create the task document
-
-            console.log('Assignees: ', values.assignees);  // Debugging log
-
-            await handleUpdateAssigneesTask(taskId, values.assignees);
-
-            for (const assignee of values.assignees) {
-                await createNotificationForAssignee(taskId, assignee, values.shortSummary);
-            }
-
-            dispatch(fetchIssuesData());
-
-            notification.success({
-                message: 'Your task has been created',
-            });
-
-            setVisible(false);
-            form.resetFields();
-        } catch (error) {
-            console.error('Error creating issue: ', error);  // Log the full error
-            notification.error({
-                message: 'Error ooops :(',
-            });
-        } finally {
-            setConfirmLoading(false);
-        }
+    const taskDataModel = {
+        key: taskId,
+        status: taskStatus.TODO.key,
+        ...values,
     };
+
+    try {
+        const issueRef = doc(db, 'issue', taskId);
+        await setDoc(issueRef, taskDataModel);
+
+        await handleUpdateAssigneesTask(taskId, values.assignees);
+
+        console.log('[Step 3] Sending notifications...');
+        for (const assignee of values.assignees) {
+            await createNotificationForAssignee(taskId, assignee, values.shortSummary);
+        }
+
+        dispatch(fetchIssuesData());
+
+        notification.success({
+            message: 'Your task has been created',
+        });
+
+        handleCloseModal();
+    } catch (error) {
+        console.error('Error in handleCreateIssue:', error);
+        notification.error({
+            message: 'Error creating task. Check console for details.',
+        });
+    } finally {
+        setConfirmLoading(false);
+    }
+};
+
 
     return (
         <Modal
             title="Create issue"
-            okText="Create issue"
-            centered
             open={visible}
-            width={800}
-            confirmLoading={confirmLoading}
             onCancel={handleCloseModal}
-            onOk={form.submit}
+            onOk={() => form.submit()}
+            okText="Create issue"
+            confirmLoading={confirmLoading}
+            centered
+            width={800}
             styles={{
                 body: {
                     maxHeight: '600px',
                     overflowY: 'auto',
-                    overflowX: 'hidden'
-                }
+                    overflowX: 'hidden',
+                },
             }}
         >
-            <IssueModalForm 
-                form={form}
-                onFinish={handleCreateIssue}
-            />
+            <IssueModalForm form={form} onFinish={handleCreateIssue} />
         </Modal>
     );
 };

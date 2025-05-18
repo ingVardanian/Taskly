@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { db, updateDoc, doc } from '../../../services/firebase/firebase';
 import LoadingWrapper from '../../components/shared/LoadingWrapper';
-import { Typography, Flex, Avatar, Button, Tooltip, Input } from 'antd';
+import { Typography, Flex, Avatar, Tooltip } from 'antd';
 import EditIssueModal from '../../components/shared/EditIssueModal';
 import { ISSUE_OPTION, PRIORITY_OPTION } from '../../../core/constants/issue';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,6 +11,7 @@ import { fetchUsersData } from '../../../state-managment/slices/usersSlice';
 import './index.css';
 import { getFirstLetters } from '../../../core/helpers/getFirstLetters';
 import { getColorByName } from '../../../core/helpers/getColorByName';
+import { useOutletContext } from 'react-router-dom';
 
 const { Title, Text } = Typography;
 
@@ -18,17 +19,16 @@ const CabinetBoard = () => {
     const [selectedIssueData, setSelectedIssueData] = useState(null);
     const dispatch = useDispatch();
 
-    // Get issues and users data from the Redux store
     const { issueColumns, loading } = useSelector(state => state.issues);
     const { users } = useSelector(state => state.users);
 
-    // Fetch issues and users data when the component mounts
+    const { searchTerm } = useOutletContext();
+
     useEffect(() => {
         dispatch(fetchIssuesData());
         dispatch(fetchUsersData());
     }, [dispatch]);
 
-    // Function to handle drag-and-drop of issues
     const handleDragEnd = result => {
         dispatch(changeIssueColumns(result));
     };
@@ -37,12 +37,15 @@ const CabinetBoard = () => {
         if (result.destination) {
             try {
                 handleDragEnd(result);
-                const { destination: { droppableId, index }, draggableId } = result;
+                const {
+                    destination: { droppableId, index },
+                    draggableId,
+                } = result;
 
                 const docRef = doc(db, 'issue', draggableId);
                 await updateDoc(docRef, {
                     status: droppableId,
-                    index
+                    index,
                 });
             } catch {
                 console.log('Error updating task status');
@@ -50,34 +53,28 @@ const CabinetBoard = () => {
         }
     };
 
-    // Function to get user by ID
-    const getUserById = (userId) => {
-        return users.find(user => user.id === userId); // Get user by matching IDs
+    const getUserById = userId => {
+        return users.find(user => user.id === userId);
     };
 
-    // Render the avatars for the assignees of each issue
-    const renderAssigneeAvatars = (assignees) => {
-        // Ensure assignees is always an array (even if it's a single ID)
+    const renderAssigneeAvatars = assignees => {
         const assigneeArray = Array.isArray(assignees) ? assignees : [assignees];
 
-        return assigneeArray.map((assigneeId) => {
+        return assigneeArray.map(assigneeId => {
             const user = getUserById(assigneeId);
             if (user) {
                 const firstLetter = getFirstLetters(user.firstName);
-                const color = getColorByName(user.firstName);  // Color based on first name
+                const color = getColorByName(user.firstName);
 
                 return (
                     <Tooltip title={user.firstName} key={assigneeId}>
-                        <Avatar
-                            style={{ backgroundColor: color }}
-                            size={30}
-                        >
+                        <Avatar style={{ backgroundColor: color }} size={30}>
                             {firstLetter}
                         </Avatar>
                     </Tooltip>
                 );
             }
-            return null;  // If no user is found, return null
+            return null;
         });
     };
 
@@ -86,12 +83,16 @@ const CabinetBoard = () => {
             <LoadingWrapper loading={loading}>
                 <DragDropContext onDragEnd={handleChangeTaskStatus}>
                     {Object.entries(issueColumns).map(([columnId, column]) => {
+                        const filteredItems = column.items.filter(item =>
+                            item.shortSummary.toLowerCase().includes(searchTerm?.toLowerCase() || '')
+                        );
+
                         return (
                             <div className="column_container" key={columnId}>
                                 <div className="column_header">
                                     <Title level={5} type="secondary">
                                         {column.name} {' '}
-                                        {column.items.length}
+                                        {filteredItems.length}
                                     </Title>
                                 </div>
 
@@ -102,12 +103,10 @@ const CabinetBoard = () => {
                                             ref={provided.innerRef}
                                             className="droppable_container"
                                             style={{
-                                                backgroundColor: snapshot.isDraggingOver
-                                                    ? 'lightblue'
-                                                    : '#f4f5f7',
+                                                backgroundColor: snapshot.isDraggingOver ? 'lightblue' : '#f4f5f7',
                                             }}
                                         >
-                                            {column.items.map((item, index) => (
+                                            {filteredItems.map((item, index) => (
                                                 <Draggable key={item.key} draggableId={item.key} index={index}>
                                                     {(provided, snapshot) => (
                                                         <div
@@ -130,7 +129,6 @@ const CabinetBoard = () => {
                                                                 </div>
 
                                                                 <div>
-                                                                    {/* Render Assignee Avatars inside the task card */}
                                                                     <div className="avatar-group">
                                                                         {renderAssigneeAvatars(item.assignees)}
                                                                     </div>
@@ -140,6 +138,7 @@ const CabinetBoard = () => {
                                                     )}
                                                 </Draggable>
                                             ))}
+                                            {provided.placeholder}
                                         </div>
                                     )}
                                 </Droppable>

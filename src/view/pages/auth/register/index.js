@@ -38,7 +38,11 @@ const Register = () => {
             await setDoc(createDoc, {
                 email,
                 ...restData,
-                isAdmin
+                isAdmin,
+                notifications: {
+                    email: true,
+                    slack: false
+                },
             });
             dispatch(setIsAuth(true)); 
         } catch (error) {
