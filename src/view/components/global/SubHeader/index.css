@@ -1,9 +1,50 @@
 .sub_header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+  padding: 8px 12px;
+  background-color: #f4f5f7;
+  border-radius: 8px;
+  height: auto;          /* Let height grow */
+  min-height: 48px;      /* Minimum height for desktop */
 }
 
-.serach_input {
-    width: 200px;
+/* Mobile - stacked layout */
+@media (max-width: 480px) {
+  .sub_header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 16px 12px;
+    height: auto;        /* Flexible height */
+    min-height: unset;   /* Remove min-height so it doesn't restrict */
+  }
+
+  .serach_input {
+    width: 100%;
+    min-width: auto;
+    flex-shrink: 1;
+  }
+
+  .ant-avatar-group {
+    max-width: 100%;
+    order: 2;
+    justify-content: flex-start !important;
+    margin: 0;
+    overflow: visible !important;
+    display: flex !important;
+  }
+
+  button.ant-btn-primary {
+    width: 100%;
+    order: 3;
+    height: auto;
+    padding: 8px 12px;
+    white-space: normal;
+  }
+
+  .ant-divider-vertical {
+    display: none;
+  }
 }

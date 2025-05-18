@@ -1,52 +1,137 @@
+/* --- Responsive Container Grid --- */
 .drag_context_container {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  padding: 16px;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-x: hidden;
 }
 
-.droppable_container {
-    padding: 5px 10px  20px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    min-height: 500px;
-}
-
+/* --- Column Container --- */
 .column_container {
-    display: flex;
-    flex-direction: column;
-    background-color: #f4f5f7;
-    border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  background-color: #f4f5f7;
+  border-radius: 10px;
+  padding: 8px;
+  box-sizing: border-box;
 }
 
-.column_container .column_header {
-    display: flex;
-    align-items: center;
-    padding: 15px 10px;
+/* --- Column Header --- */
+.column_header {
+  padding: 10px;
+  background: transparent;
 }
 
 .column_header > h5 {
-    margin: 0;
+  margin: 0;
+  font-size: 17px;
+  font-weight: 500;
 }
 
-.issue_card_container {
-    padding: 18px;
-    user-select: none;
-    box-shadow: 0px 3px 5px #bebbbb;
-    border-radius: 6px;
+/* --- Droppable Area --- */
+.droppable_container {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 300px;
+  box-sizing: border-box;
 }
-.assignees_container{
-    display: flex ;
-    width: 40px;
-    height: 40px;
-    gap: 6px;
-    align-items: center;
+
+/* --- Issue Card (Jira-style) --- */
+.issue_card_container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 14px 16px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.07);
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+  word-break: break-word;
+}
+
+.issue_card_container:hover {
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+/* --- Avatar Group --- */
+.avatar-group {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* --- Avatars --- */
+.avatar-group .ant-avatar {
+  width: 28px !important;
+  height: 28px !important;
+  font-size: 13px;
+}
+
+/* --- Tablet --- */
+@media (max-width: 1024px) {
+  .drag_context_container {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    padding: 12px;
   }
-  
-  .assignee-avatar {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid #ccc;
+
+  .issue_card_container {
+    padding: 12px 14px;
+    font-size: 14px;
   }
+
+  .column_header > h5 {
+    font-size: 16px;
+  }
+}
+@media (max-width: 600px) {
+  .drag_context_container {
+    grid-template-columns: 1fr;
+    padding: 16px 12px;  /* More padding for breathing room */
+    overflow-x: hidden;
+  }
+
+  .column_container {
+    width: 100%;
+    padding: 12px 8px;
+    background-color: #f9fafb; /* subtle light background for columns */
+    border-radius: 12px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+  }
+
+  .droppable_container {
+    padding: 12px 10px;
+    min-height: auto;
+  }
+
+  .issue_card_container {
+    padding: 16px 20px;
+    font-size: 15px;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    transition: box-shadow 0.3s ease;
+  }
+
+  .issue_card_container:hover {
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+  }
+
+  .avatar-group {
+    gap: 8px;
+  }
+
+  .avatar-group .ant-avatar {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 14px;
+  }
+
+  .column_header > h5 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+}

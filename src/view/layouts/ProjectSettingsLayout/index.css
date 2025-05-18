@@ -1,11 +1,9 @@
 .settings_layout_container {
-    height: calc(100vh - 64px);
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: 100px 1fr;
-    gap: 20px;
-    grid-template-areas: 
-    'sidebar subHeader'
-    'sidebar mainContainer'
-    ;
- }  
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 100px 1fr;
+  gap: 20px;
+  grid-template-areas:
+    "sidebar subHeader"
+    "sidebar mainContainer";
+}
